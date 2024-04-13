@@ -18,4 +18,5 @@ public class Post {
     private  List<View> views = new ArrayList<>();
     private String content;
 
+
 }

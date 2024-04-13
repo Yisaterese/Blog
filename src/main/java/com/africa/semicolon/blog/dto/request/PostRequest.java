@@ -17,5 +17,6 @@ public class PostRequest {
     private String id;
     private  List<View> views = new ArrayList<>();
     private String content;
+    private String author;
 
 }
