@@ -1,8 +1,7 @@
 package com.africa.semicolon.blog.services;
-import com.africa.semicolon.blog.dto.request.CreatePostRequest;
 import com.africa.semicolon.blog.dto.request.LoginRequest;
 import com.africa.semicolon.blog.dto.request.PostRequest;
-import com.africa.semicolon.blog.dto.request.RegisterRequest;
+import com.africa.semicolon.blog.dto.request.UserRegisterRequest;
 import com.africa.semicolon.blog.dto.utility.response.AddViewToPostResponse;
 import com.africa.semicolon.blog.dto.utility.response.CreatePostResponse;
 import com.africa.semicolon.blog.dto.utility.response.LoginResponse;
@@ -10,7 +9,6 @@ import com.africa.semicolon.blog.dto.utility.response.RegisterResponse;
 import com.africa.semicolon.blog.exception.*;
 import com.africa.semicolon.blog.model.Post;
 import com.africa.semicolon.blog.model.User;
-import com.africa.semicolon.blog.model.View;
 import com.africa.semicolon.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,15 +24,18 @@ public class UserServicesImpl implements UserServices{
     @Autowired
     ViewServices viewServices;
     @Override
-    public RegisterResponse registerUser(RegisterRequest registerRequest) {
+    public RegisterResponse registerUser(UserRegisterRequest registerRequest) {
         User isExistingUser = userRepository.findByUsername(registerRequest.getUsername());
-        if (isExistingUser != null)  throw new ExistingUserException("username taken");
+        validateUser(isExistingUser);
         User newUser = new User();
         newUser.setPassword(registerRequest.getPassword());
         newUser.setUsername(registerRequest.getUsername());
         newUser.setEmail(registerRequest.getEmail());
         userRepository.save(newUser);
         return mapRegisterResponse(newUser);
+    }
+    private static void validateUser(User isExistingUser) {
+        if (isExistingUser != null)  throw new ExistingUserException("username taken");
     }
 
 //    @Override
@@ -66,14 +67,12 @@ public class UserServicesImpl implements UserServices{
         userRepository.save(foundUser) ;
         return mapLogin(foundUser);
     }
-
-    private static String validateNullUser(User foundUser) {
+    private static void validateNullUser(User foundUser) {
         try {
             if (foundUser == null) throw new ExistingUserException("user not found");
         }catch (ExistingUserException e){
-            return e.getMessage();
+            System.out.println(e.getMessage());
         }
-        throw new ExistingUserException("user not found ");
     }
     private static void setLoginFields(LoginRequest loginRequest, User isExistingUser) {
         isExistingUser.setUsername(loginRequest.getUsername());
@@ -98,19 +97,39 @@ public class UserServicesImpl implements UserServices{
 
         throw new InvalidLoginRequestException("Access denied");
     }
-
     @Override
-    public CreatePostResponse createPost(CreatePostRequest createPostRequest) {
-        return postServices.createPost(createPostRequest);
+    public CreatePostResponse createUserPost(PostRequest postRequest, UserRegisterRequest userRequest) {
+        User isExistingUser = findByUsername(userRequest.getUsername());
+        validateUser(isExistingUser);
+        Post newCreatedPost = postServices.createPost(postRequest);
+        isExistingUser.getPosts().add(newCreatedPost);
+        return mapPost(newCreatedPost);
     }
     @Override
     public int getNumberOfUsers() {
         return userRepository.findAll().size();
      }
-
     @Override
     public AddViewToPostResponse addViewToPost(PostRequest postRequest, User viewer) {
-        return postServices.addViewToPost(postRequest,viewer);
+        return null;
     }
+    @Override
+    public AddViewToPostResponse addViewToPost(PostRequest postRequest, UserRegisterRequest userRegisterRequest) {
+        User registeredUser = findByUsername(userRegisterRequest.getUsername());
+        Post post = postServices.findPostByTitle(postRequest.getTitle());
+
+        return postServices.addViewToPost(postRequest,registeredUser);
+    }
+    @Override
+    public int getNumberOfPosts() {
+        return postServices.getNumberOfPosts();
+    }
+    @Override
+    public User findByUsername(String username) {
+        User foundUser = userRepository.findByUsername(username);
+        if(foundUser == null)throw new ExistingUserException("User not found");
+        return foundUser;
+    }
+
 
 }

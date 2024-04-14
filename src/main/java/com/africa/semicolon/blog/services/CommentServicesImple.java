@@ -4,7 +4,7 @@ import com.africa.semicolon.blog.dto.request.CommentRequest;
 import com.africa.semicolon.blog.model.Comment;
 import com.africa.semicolon.blog.model.Post;
 import com.africa.semicolon.blog.model.User;
-import com.africa.semicolon.blog.dto.request.UserRequest;
+import com.africa.semicolon.blog.dto.request.UserRegisterRequest;
 import com.africa.semicolon.blog.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,12 +25,12 @@ public class CommentServicesImple implements CommentServices {
         return 0;
     }
     @Override
-    public User commenter(UserRequest userRequest) {
+    public User commenter(UserRegisterRequest userRequest) {
         return null;
     }
 
     @Override
-    public void addComment(UserRequest userRequest, CommentRequest commentRequest) {
+    public void addComment(UserRegisterRequest userRequest, CommentRequest commentRequest) {
 
     }
     @Override

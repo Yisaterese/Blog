@@ -1,8 +1,9 @@
 package com.africa.semicolon.blog.controller;
 
-import com.africa.semicolon.blog.dto.request.CreatePostRequest;
+import com.africa.semicolon.blog.dto.request.CreatePostRequests;
 import com.africa.semicolon.blog.dto.request.LoginRequest;
-import com.africa.semicolon.blog.dto.request.RegisterRequest;
+import com.africa.semicolon.blog.dto.request.PostRequest;
+import com.africa.semicolon.blog.dto.request.UserRegisterRequest;
 import com.africa.semicolon.blog.dto.utility.response.ApiResponse;
 import com.africa.semicolon.blog.dto.utility.response.CreatePostResponse;
 import com.africa.semicolon.blog.dto.utility.response.LoginResponse;
@@ -24,7 +25,7 @@ public class UserController {
     @Autowired
     UserServices userServices;
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody RegisterRequest userRegisterRequest) {
+    public ResponseEntity<?> registerUser(@RequestBody UserRegisterRequest userRegisterRequest) {
         try {
             RegisterResponse registerResponse = userServices.registerUser(userRegisterRequest);
             return new ResponseEntity<>(new ApiResponse(true, registerResponse), HttpStatus.OK);
@@ -41,10 +42,10 @@ public class UserController {
             return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
-    @PostMapping("/login")
-    public ResponseEntity<?> createPost(@RequestBody CreatePostRequest createPostRequest) {
+    @PostMapping("/createPost")
+    public ResponseEntity<?> createPost(@RequestBody CreatePostRequests postRequests) {
         try {
-            CreatePostResponse createPostResponse = userServices.createPost(createPostRequest);
+            CreatePostResponse createPostResponse = userServices.createUserPost(postRequests.getPostRequest(), postRequests.getUserRegisterRequest());
             return new ResponseEntity<>(new ApiResponse(true, createPostResponse), HttpStatus.OK);
         } catch (IncorrectUsernameException e) {
             return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);

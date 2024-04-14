@@ -17,5 +17,4 @@ public class User {
     private List<Post> posts;
     private boolean isLoggedIn;
 
-
 }

@@ -4,7 +4,7 @@ import com.africa.semicolon.blog.dto.request.CommentRequest;
 import com.africa.semicolon.blog.model.Comment;
 import com.africa.semicolon.blog.model.Post;
 import com.africa.semicolon.blog.model.User;
-import com.africa.semicolon.blog.dto.request.UserRequest;
+import com.africa.semicolon.blog.dto.request.UserRegisterRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +13,8 @@ import java.util.List;
 public interface CommentServices {
     String findById();
     int numberOfComments();
-    User commenter(UserRequest userRequest);
-    void addComment(UserRequest userRequest, CommentRequest commentRequest);
+    User commenter(UserRegisterRequest userRequest);
+    void addComment(UserRegisterRequest userRequest, CommentRequest commentRequest);
 
     void addComment(User user, CommentRequest commentRequest);
 

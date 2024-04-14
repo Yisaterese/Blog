@@ -1,9 +1,8 @@
 package com.africa.semicolon.blog.services;
 
-import com.africa.semicolon.blog.dto.request.CreatePostRequest;
 import com.africa.semicolon.blog.dto.request.PostRequest;
 import com.africa.semicolon.blog.dto.utility.response.AddViewToPostResponse;
-import com.africa.semicolon.blog.dto.utility.response.CreatePostResponse;
+import com.africa.semicolon.blog.exception.PostNotFoundException;
 import com.africa.semicolon.blog.model.Comment;
 import com.africa.semicolon.blog.model.Post;
 import com.africa.semicolon.blog.model.User;
@@ -12,10 +11,7 @@ import com.africa.semicolon.blog.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 import static com.africa.semicolon.blog.dto.utility.mapper.mapAddViewToPost;
-import static com.africa.semicolon.blog.dto.utility.mapper.mapPost;
 
 @Service
 public class PostServicesImplementation implements PostServices{
@@ -34,29 +30,49 @@ public class PostServicesImplementation implements PostServices{
     }
 
     @Override
-    public CreatePostResponse createPost(CreatePostRequest createPostRequest) {
+    public Post createPost(PostRequest createPostRequest) {
+        final Post isExistingPost = getExistingPost(createPostRequest);
+        validatePost(isExistingPost);
         Post post = new Post();
         createPostRequest.setTitle(post.getTitle());
         createPostRequest.setContent(post.getContent());
         createPostRequest.setCreatedAt(post.getCreatedAt());
-        return mapPost(post);
+        postRepository.save(post);
+        return post;
     }
+
+    private Post getExistingPost(PostRequest createPostRequest) {
+        return  postRepository.findPostBy(createPostRequest.getTitle());
+    }
+
     @Override
-    public List<Post> findPostByUsername(String username) {
-        return null;
+    public Post findPostByTitle(String username) {
+        return postRepository.findPostBy(username);
     }
 
     @Override
     public AddViewToPostResponse addViewToPost(PostRequest postRequest, User viewer) {
-        Post post = postRepository.findPostBy(postRequest.getAuthor());
-        View newView = viewServices.
-                post.getViews().add(newView);
-
+        Post post = postRepository.findPostBy(postRequest.getTitle());
+        validatePost(post);
+        View newView = viewServices.createPostView(viewer);
+        post.getViews().add(newView);
+        postRepository.save(post);
         return mapAddViewToPost();
+    }
+
+    private static String validatePost(Post post) {
+        try {if (post == null) throw new PostNotFoundException("post not found");
+        }catch (PostNotFoundException e){return e.getMessage();}
+        return "Post is not found";
     }
 
     @Override
     public void addCommentToPost(Post post, Comment comment) {
 
+    }
+
+    @Override
+    public int getNumberOfPosts() {
+        return postRepository.findAll().size();
     }
 }

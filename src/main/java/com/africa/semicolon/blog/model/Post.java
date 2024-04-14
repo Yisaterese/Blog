@@ -10,13 +10,12 @@ import java.util.List;
 @Data
 @Document("Post")
 public class Post {
-    private String title;
-    private LocalDateTime createdAt;
-    private List<Comment> comments = new ArrayList<>();
     @Id
     private String id;
-    private  List<View> views = new ArrayList<>();
+    private String title;
+    private LocalDateTime createdAt;
     private String content;
-
+    private List<Comment> comments = new ArrayList<>();
+    private  List<View> views = new ArrayList<>();
 
 }

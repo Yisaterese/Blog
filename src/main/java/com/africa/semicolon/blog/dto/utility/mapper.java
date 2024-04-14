@@ -20,6 +20,7 @@ public class mapper {
         createPostResponse.setTitle(post.getTitle());
         createPostResponse.setContent(post.getContent());
         createPostResponse.setCreatedAt(post.getCreatedAt());
+        createPostResponse.setId(post.getId());
         return  createPostResponse;
     }
 
@@ -32,7 +33,6 @@ public class mapper {
         return loginResponse;
     }
 
-    public static AddViewToPostResponse mapAddViewToPost(){
-
+    public static AddViewToPostResponse mapAddViewToPost(){return null;
     }
 }
