@@ -1,5 +1,6 @@
 package com.africa.semicolon.blog.dto.utility;
 
+import com.africa.semicolon.blog.dto.request.DeletePostResponse;
 import com.africa.semicolon.blog.dto.utility.response.AddViewToPostResponse;
 import com.africa.semicolon.blog.dto.utility.response.CreatePostResponse;
 import com.africa.semicolon.blog.dto.utility.response.LoginResponse;
@@ -26,11 +27,16 @@ public class mapper {
 
     public static LoginResponse mapLogin(User user){
         LoginResponse loginResponse = new LoginResponse();
-        loginResponse.setEmail(user.getEmail());
         loginResponse.setUsername(user.getUsername());
         loginResponse.setId(user.getId());
         loginResponse.setLogin(user.isLoggedIn());
         return loginResponse;
+    }
+
+    public static DeletePostResponse mapDeletePost(Post post){
+        DeletePostResponse deletePostResponse = new DeletePostResponse();
+        deletePostResponse.setMessage(true);
+        return deletePostResponse;
     }
 
     public static AddViewToPostResponse mapAddViewToPost(){return null;

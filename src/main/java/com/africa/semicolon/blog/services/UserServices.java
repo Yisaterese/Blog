@@ -1,5 +1,6 @@
 package com.africa.semicolon.blog.services;
 
+import com.africa.semicolon.blog.dto.request.DeletePostResponse;
 import com.africa.semicolon.blog.dto.request.LoginRequest;
 import com.africa.semicolon.blog.dto.request.PostRequest;
 import com.africa.semicolon.blog.dto.request.UserRegisterRequest;
@@ -13,18 +14,13 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UserServices {
     RegisterResponse registerUser(UserRegisterRequest userRequest);
-
-
-
     LoginResponse login(LoginRequest loginRequest);
     CreatePostResponse createUserPost(PostRequest postRequest, UserRegisterRequest userRequest);
-    //CreatePostResponse createUserPost(PostRequest createPostRequest, User user);
     int getNumberOfUsers();
-    AddViewToPostResponse addViewToPost(PostRequest postRequest, User viewer);
     AddViewToPostResponse addViewToPost(PostRequest postRequest, UserRegisterRequest registerRequest);
-
     int getNumberOfPosts();
     User findByUsername(String username);
+    DeletePostResponse deletePost(PostRequest postRequest, UserRegisterRequest userRegisterRequest);
 //    void addCommentToPost(Post post, Comment comment);
 
 

@@ -1,23 +1,18 @@
 package com.africa.semicolon.blog.controller;
 
-import com.africa.semicolon.blog.dto.request.CreatePostRequests;
-import com.africa.semicolon.blog.dto.request.LoginRequest;
-import com.africa.semicolon.blog.dto.request.PostRequest;
-import com.africa.semicolon.blog.dto.request.UserRegisterRequest;
+import com.africa.semicolon.blog.dto.request.*;
 import com.africa.semicolon.blog.dto.utility.response.ApiResponse;
 import com.africa.semicolon.blog.dto.utility.response.CreatePostResponse;
 import com.africa.semicolon.blog.dto.utility.response.LoginResponse;
 import com.africa.semicolon.blog.dto.utility.response.RegisterResponse;
 import com.africa.semicolon.blog.exception.ExistingUserException;
 import com.africa.semicolon.blog.exception.IncorrectUsernameException;
+import com.africa.semicolon.blog.exception.NotUserPostException;
 import com.africa.semicolon.blog.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path="api/v1/user")
@@ -49,6 +44,15 @@ public class UserController {
             return new ResponseEntity<>(new ApiResponse(true, createPostResponse), HttpStatus.OK);
         } catch (IncorrectUsernameException e) {
             return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+    @DeleteMapping("/deletePost")
+    public ResponseEntity<?> deletePost(@PathVariable DeletePostRequests deletePostRequests){
+        try{
+            DeletePostResponse deletePostResponse = userServices.deletePost(deletePostRequests.getPostRequest(),deletePostRequests.getUserRegisterRequest());
+            return new ResponseEntity<>(new ApiResponse(true,deletePostResponse),HttpStatus.OK);
+        }catch (NotUserPostException e){
+            return new ResponseEntity<>(new ApiResponse(false,e.getMessage()),HttpStatus.BAD_REQUEST);
         }
     }
 }

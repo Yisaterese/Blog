@@ -18,8 +18,6 @@ class UserServicesImplTest {
     UserServices userServices;
     @Autowired
     UserRepository userRepository;
-
-
     @AfterEach
     private void cleanUp(){
         userRepository.deleteAll();
@@ -33,6 +31,7 @@ class UserServicesImplTest {
         userRegisterRequest.setEmail("joseph@gmail.com");
         userServices.registerUser(userRegisterRequest);
         Assertions.assertEquals(1,userServices.getNumberOfUsers());
+        userRepository.deleteAll();
     }
 
     @Test
@@ -44,7 +43,7 @@ class UserServicesImplTest {
         userRegisterRequest.setEmail("joseph@gmail.com");
         userServices.registerUser(userRegisterRequest);
         Assertions.assertEquals(1,userServices.getNumberOfUsers());
-
+        userRepository.deleteAll();
 
         userRegisterRequest.setUsername("Joseph");
         userRegisterRequest.setPassword("MyPassword");
@@ -60,6 +59,9 @@ class UserServicesImplTest {
         userRegisterRequest.setPassword("MyPassword");
         userRegisterRequest.setEmail("joseph@gmail.com");
         userServices.registerUser(userRegisterRequest);
+        Assertions.assertEquals(1,userServices.getNumberOfUsers());
+        userRepository.deleteAll();
+
 
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setUsername(userRegisterRequest.getUsername());
@@ -76,6 +78,8 @@ class UserServicesImplTest {
         userRegisterRequest.setPassword("MyPassword");
         userRegisterRequest.setEmail("joseph@gmail.com");
         userServices.registerUser(userRegisterRequest);
+        Assertions.assertEquals(1,userServices.getNumberOfUsers());
+        userRepository.deleteAll();
 
         LoginRequest loginRequest = new LoginRequest();
 
