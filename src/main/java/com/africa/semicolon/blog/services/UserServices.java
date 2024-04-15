@@ -1,9 +1,6 @@
 package com.africa.semicolon.blog.services;
 
-import com.africa.semicolon.blog.dto.request.DeletePostResponse;
-import com.africa.semicolon.blog.dto.request.LoginRequest;
-import com.africa.semicolon.blog.dto.request.PostRequest;
-import com.africa.semicolon.blog.dto.request.UserRegisterRequest;
+import com.africa.semicolon.blog.dto.request.*;
 import com.africa.semicolon.blog.dto.utility.response.AddViewToPostResponse;
 import com.africa.semicolon.blog.dto.utility.response.CreatePostResponse;
 import com.africa.semicolon.blog.dto.utility.response.LoginResponse;
@@ -21,7 +18,7 @@ public interface UserServices {
     int getNumberOfPosts();
     User findByUsername(String username);
     DeletePostResponse deletePost(PostRequest postRequest, UserRegisterRequest userRegisterRequest);
-//    void addCommentToPost(Post post, Comment comment);
+    AddCommentResponse addCommentToPost(UserRegisterRequest post, CommentRequest comment);
 
 
 }

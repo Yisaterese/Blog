@@ -1,25 +1,23 @@
 package com.africa.semicolon.blog.services;
-import com.africa.semicolon.blog.dto.request.DeletePostResponse;
-import com.africa.semicolon.blog.dto.request.LoginRequest;
-import com.africa.semicolon.blog.dto.request.PostRequest;
-import com.africa.semicolon.blog.dto.request.UserRegisterRequest;
+import com.africa.semicolon.blog.dto.request.*;
 import com.africa.semicolon.blog.dto.utility.response.AddViewToPostResponse;
 import com.africa.semicolon.blog.dto.utility.response.CreatePostResponse;
 import com.africa.semicolon.blog.dto.utility.response.LoginResponse;
 import com.africa.semicolon.blog.dto.utility.response.RegisterResponse;
 import com.africa.semicolon.blog.exception.*;
+import com.africa.semicolon.blog.model.Comment;
 import com.africa.semicolon.blog.model.Post;
 import com.africa.semicolon.blog.model.User;
 import com.africa.semicolon.blog.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 import static com.africa.semicolon.blog.dto.utility.mapper.*;
 
 @Service
 public class UserServicesImpl implements UserServices {
+    @Autowired
+    CommentServices commentServices;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -42,27 +40,6 @@ public class UserServicesImpl implements UserServices {
     private static void validateUser(User isExistingUser) {
         if (isExistingUser != null) throw new ExistingUserException("username taken");
     }
-
-//    @Override
-//    public LoginResponse login(LoginRequest loginRequest) {
-//        User foundUser = null;
-//        List<User> users = userRepository.findAll();
-//        System.out.println(users);
-//        for(User user: users){
-//            System.out.println(user);
-//            if(user.getUsername().equals(loginRequest.getUsername())){
-//                foundUser = user;
-//                System.out.println(foundUser);
-//                foundUser.setUsername(loginRequest.getUsername());
-//                foundUser.setEmail(loginRequest.getEmail());
-//                foundUser.setLoggedIn(true);
-//                userRepository.save(foundUser);
-//                return mapLogin(foundUser);
-//            }
-//        }
-//        throw new ExistingUserException("User not found");
-//    }
-
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
         User foundUser = userRepository.findByUsername(loginRequest.getUsername());
@@ -127,8 +104,6 @@ public class UserServicesImpl implements UserServices {
     @Override
     public AddViewToPostResponse addViewToPost(PostRequest postRequest, UserRegisterRequest userRegisterRequest) {
         User registeredUser = findByUsername(userRegisterRequest.getUsername());
-        Post post = postServices.findPostByTitle(postRequest.getTitle());
-
         return postServices.addViewToPost(postRequest, registeredUser);
     }
 
@@ -154,6 +129,18 @@ public class UserServicesImpl implements UserServices {
         user.getPosts().remove(foundPost);
         userRepository.save(user);
         return mapDeletePost(foundPost);
+    }
+    @Override
+    public AddCommentResponse addCommentToPost(UserRegisterRequest userRegisterRequest, CommentRequest comment) {
+        User foundUser = userRepository.findByUsername(userRegisterRequest.getUsername());
+        validateNullUser(foundUser);
+        Post foundPost = postServices.findPostByUser(foundUser);
+        if(foundPost == null)throw new PostNotFoundException("post not found");
+        Comment createdComment = commentServices.creatComment(comment);
+        foundPost.getComments().add(createdComment);
+        foundUser.getPosts().add(foundPost);
+        userRepository.save(foundUser);
+        return mapAddCommentToPost(createdComment);
     }
 
 }

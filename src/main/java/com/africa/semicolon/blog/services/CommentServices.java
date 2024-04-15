@@ -13,10 +13,6 @@ import java.util.List;
 public interface CommentServices {
     String findById();
     int numberOfComments();
-    User commenter(UserRegisterRequest userRequest);
-    void addComment(UserRegisterRequest userRequest, CommentRequest commentRequest);
-
-    void addComment(User user, CommentRequest commentRequest);
-
+    Comment creatComment(CommentRequest commentRequest);
     List<Comment> findCommentsByPost(Post post);
 }

@@ -1,13 +1,11 @@
 package com.africa.semicolon.blog.controller;
 
 import com.africa.semicolon.blog.dto.request.*;
-import com.africa.semicolon.blog.dto.utility.response.ApiResponse;
-import com.africa.semicolon.blog.dto.utility.response.CreatePostResponse;
-import com.africa.semicolon.blog.dto.utility.response.LoginResponse;
-import com.africa.semicolon.blog.dto.utility.response.RegisterResponse;
+import com.africa.semicolon.blog.dto.utility.response.*;
 import com.africa.semicolon.blog.exception.ExistingUserException;
 import com.africa.semicolon.blog.exception.IncorrectUsernameException;
 import com.africa.semicolon.blog.exception.NotUserPostException;
+import com.africa.semicolon.blog.exception.PostNotFoundException;
 import com.africa.semicolon.blog.services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -54,5 +52,24 @@ public class UserController {
         }catch (NotUserPostException e){
             return new ResponseEntity<>(new ApiResponse(false,e.getMessage()),HttpStatus.BAD_REQUEST);
         }
+    }
+    @PostMapping("/addCommentToPost")
+    public ResponseEntity<?>addCommentToPost(AddCommentToPosRequests addCommentToPosRequests){
+        try{
+            AddCommentResponse addCommentResponse = userServices.addCommentToPost(addCommentToPosRequests.getUserRegisterRequest(),addCommentToPosRequests.getCommentRequest());
+            return new ResponseEntity<>(new ApiResponse(true,addCommentResponse),HttpStatus.OK);
+        }catch (PostNotFoundException e){
+            return new ResponseEntity<>(new ApiResponse(false,e.getMessage()),HttpStatus.BAD_REQUEST);
+        }
+    }
+    @PostMapping("/addViewsToPost")
+    public ResponseEntity<?> addViewsToPost(AddViewRequests addViewRequests){
+        try{
+            AddViewToPostResponse addViewToPostResponse = userServices.addViewToPost(addViewRequests.getPostRequest(),addViewRequests.getUserRegisterRequest());
+            return new ResponseEntity<>(new ApiResponse(true,addViewToPostResponse),HttpStatus.OK);
+        }catch (PostNotFoundException e){
+            return new ResponseEntity<>(new ApiResponse(false,e.getMessage()),HttpStatus.BAD_REQUEST);
+        }
+
     }
 }

@@ -10,12 +10,10 @@ import org.springframework.stereotype.Service;
 @Service
 public interface PostServices {
      int numberOfView();
-     void createContent();
     Post createPost(PostRequest postRequest);
     Post findPostByTitle(String username);
-
     AddViewToPostResponse addViewToPost(PostRequest postRequest, User viewer);
-    void addCommentToPost(Post post, Comment comment);
-
     int getNumberOfPosts();
+
+    Post findPostByUser(User foundUser);
 }

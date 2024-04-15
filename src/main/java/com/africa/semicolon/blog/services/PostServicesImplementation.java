@@ -21,14 +21,8 @@ public class PostServicesImplementation implements PostServices{
     ViewServices viewServices;
     @Override
     public int numberOfView() {
-        return 0;
+        return postRepository.findAll().size();
     }
-
-    @Override
-    public void createContent() {
-
-    }
-
     @Override
     public Post createPost(PostRequest createPostRequest) {
         final Post isExistingPost = getExistingPost(createPostRequest);
@@ -40,18 +34,15 @@ public class PostServicesImplementation implements PostServices{
         postRepository.save(post);
         return post;
     }
-
     private Post getExistingPost(PostRequest createPostRequest) {
         return  postRepository.findPostBy(createPostRequest.getTitle());
     }
-
     @Override
     public Post findPostByTitle(String username) {
         return postRepository.findPostBy(username);
     }
-
     @Override
-    public AddViewToPostResponse addViewToPost(PostRequest postRequest, User viewer) {
+    public AddViewToPostResponse    addViewToPost(PostRequest postRequest, User viewer) {
         Post post = postRepository.findPostBy(postRequest.getTitle());
         validatePost(post);
         View newView = viewServices.createPostView(viewer);
@@ -67,12 +58,14 @@ public class PostServicesImplementation implements PostServices{
     }
 
     @Override
-    public void addCommentToPost(Post post, Comment comment) {
-
+    public int getNumberOfPosts() {
+        return postRepository.findAll().size();
     }
 
     @Override
-    public int getNumberOfPosts() {
-        return postRepository.findAll().size();
+    public Post findPostByUser(User foundUser) {
+        Post foundPost = postRepository.findPostBy(foundUser);
+        validatePost(foundPost);
+        return foundPost;
     }
 }

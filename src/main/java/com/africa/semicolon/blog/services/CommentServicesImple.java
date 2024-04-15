@@ -9,7 +9,6 @@ import com.africa.semicolon.blog.repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,27 +24,12 @@ public class CommentServicesImple implements CommentServices {
         return 0;
     }
     @Override
-    public User commenter(UserRegisterRequest userRequest) {
-        return null;
-    }
-
-    @Override
-    public void addComment(UserRegisterRequest userRequest, CommentRequest commentRequest) {
-
-    }
-    @Override
-    public void addComment(User user, CommentRequest commentRequest) {
+    public Comment creatComment(CommentRequest commentRequest) {
         Comment comment = new Comment();
         comment.setComment(commentRequest.getComment());
-        comment.setCommenter(user);
-        List<Comment> comments = new ArrayList<>();
-        comments.add(comment);
-        commentRepository.save(comment);
-
-
-
+        comment.setId(commentRequest.getId());
+        return comment;
     }
-
     @Override
     public List<Comment> findCommentsByPost(Post post) {
         return commentRepository.findCommentBy(post);

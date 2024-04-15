@@ -1,10 +1,12 @@
 package com.africa.semicolon.blog.dto.utility;
 
+import com.africa.semicolon.blog.dto.request.AddCommentResponse;
 import com.africa.semicolon.blog.dto.request.DeletePostResponse;
 import com.africa.semicolon.blog.dto.utility.response.AddViewToPostResponse;
 import com.africa.semicolon.blog.dto.utility.response.CreatePostResponse;
 import com.africa.semicolon.blog.dto.utility.response.LoginResponse;
 import com.africa.semicolon.blog.dto.utility.response.RegisterResponse;
+import com.africa.semicolon.blog.model.Comment;
 import com.africa.semicolon.blog.model.Post;
 import com.africa.semicolon.blog.model.User;
 
@@ -40,5 +42,12 @@ public class mapper {
     }
 
     public static AddViewToPostResponse mapAddViewToPost(){return null;
+    }
+
+    public static AddCommentResponse mapAddCommentToPost(Comment comment){
+        AddCommentResponse addCommentResponse = new AddCommentResponse();
+        addCommentResponse.setComment(comment.getComment());
+        addCommentResponse.setId(comment.getId());
+        return addCommentResponse;
     }
 }
